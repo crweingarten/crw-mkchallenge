@@ -5,6 +5,8 @@ import TextField from '@material-ui/core/TextField';
 import Container from '@material-ui/core/Container';
 import { makeStyles } from '@material-ui/core/styles';
 import { useFormik } from 'formik';
+import axios from 'axios';
+
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -26,6 +28,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
+
+
 export default function InputForm() {
   const classes = useStyles();
   const [isConfirmed, userConfirmation] = useState(false);
@@ -37,12 +41,23 @@ export default function InputForm() {
       message: "",
     },
     onSubmit: values => {
-     console.log(values)
-     userConfirmation(true);
-    },
-  });
+     userConfirmation(true)
+     submitToAPI(values);
+    }
+  })
 
-
+  const submitToAPI = (data) => {
+    const api = 'https://cors-anywhere.herokuapp.com/https://mjxbdarvb8.execute-api.us-east-1.amazonaws.com/MK-Contact';
+    axios
+      .post(api, data)
+      .then((response) => {
+        console.log(response);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+    }
+  
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
@@ -63,7 +78,6 @@ export default function InputForm() {
             value={formik.values.name}
           />
         
-         
           <TextField
             variant="outlined"
             margin="normal"
@@ -77,8 +91,7 @@ export default function InputForm() {
             value={formik.values.email}
 
           />
-          
-
+        
         <TextField
             variant="outlined"
             margin="normal"
